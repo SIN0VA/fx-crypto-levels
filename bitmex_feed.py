@@ -1,5 +1,3 @@
-# access_token = "fa460dd7feedfc3de8b4737c29ae9b37-44c69dafc4645c0fb525215770210b62"
-# accountID = "101-004-9745234-003"
 import time
 import helpers as hlp
 import matplotlib.pyplot as plt

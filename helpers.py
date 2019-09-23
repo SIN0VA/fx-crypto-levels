@@ -11,8 +11,10 @@ import ccxt
 from scipy.signal import find_peaks
 
 
-oandatoken = "fa460dd7fe3dfc3de824737c29ae9b27-44c69dafc4645c0f5525213770210b62"  # it won't work replace your own here
+# it won't work replace your own here
+oandatoken = "fa460dd7fe3dfc3de824737c29ae9b27-44c69dafc4645c0f5525213770210b62"
 oandaaccountID = "101-004-9745234-003"  # here too
+
 
 def StochSMA(dfLow, dfHigh, dfClose, period=14, fast=3, slow=3):
     K = pd.Series(((dfClose - dfLow.rolling(period).min()) /

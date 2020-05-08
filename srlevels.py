@@ -4,6 +4,7 @@ import quandl
 import pickle
 import datetime
 import numpy as np
+import matplotlib.pyplot as plt
 from oandapyV20 import API
 import oandapyV20.endpoints.instruments as v20instruments
 from collections import OrderedDict
@@ -14,6 +15,22 @@ from scipy.signal import find_peaks
 # it won't work replace your own here
 oandatoken = "fa460dd7fe3dfc3de824737c29ae9b27-44c69dafc4645c0f5525213770210b62"
 oandaaccountID = "101-004-9745234-003"  # here too
+
+
+def returns(df):
+    daily_returns = (df / df.shift(1)) - 1
+    # daily_returns.ix[0] = 0
+    return daily_returns
+
+
+def plot_histogram(df, bins):
+    mean = df.mean(skipna=True)
+    std = df.std(skipna=True)
+    df.hist(bins=bins)
+    plt.axvline(mean.item(), color='w', linestyle='dashed', linewidth=2)
+    plt.axvline(std.item(), color='r', linestyle='dashed')
+    plt.axvline(-std.item(), color='r', linestyle='dashed')
+    plt.show()
 
 
 def StochSMA(dfLow, dfHigh, dfClose, period=14, fast=3, slow=3):

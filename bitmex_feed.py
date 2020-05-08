@@ -1,5 +1,5 @@
 import time
-import helpers as hlp
+import srlevels as hlp
 import matplotlib.pyplot as plt
 from mpl_finance import candlestick_ohlc
 from pyti import bollinger_bands
@@ -8,7 +8,7 @@ import numpy as np
 from timeit import default_timer as timer
 bitmex = ccxt.bitmex()
 
-count = 20  # count in days in the past
+count = 10  # count in days in the past
 gran = '1h'
 symbol = 'BTC/USD'
 price_prom = 0.15
@@ -23,8 +23,10 @@ if __name__ == "__main__":
     # dfseas = seasonal_decompose(dfdt)
     # finding BB%
     dfflist = df['close'].tolist()
+    dfreturns = hlp.returns(df['close'])
+    hlp.plot_histogram(dfreturns, 20)
     print(df.head())
-    bbl = bollinger_bands.percent_b(dfflist, 20, 2.0)
+    bbl = bollinger_bands.percent_b(dfflist, 70, 2.0)
     bbdivs_bear, bbdivs_bull, bpf, pbf = hlp.divergence2(
         bbl, df, prominence=5, hei=20)
     # SRSI and its peaks/bottoms
@@ -44,7 +46,7 @@ if __name__ == "__main__":
     dfohlc.reindex(range(0, len(df['close'])))
 
     # plotting
-    f, axarr = plt.subplots(2, sharex=True)
+    f, axarr = plt.subplots(3, sharex=True)
     for x in lines.index:
         axarr[0].hlines(y=lines['peak'].iloc[x], xmin=x, xmax=len(
             df['close']) - 1, colors=lines['color'].iloc[x])
@@ -55,10 +57,10 @@ if __name__ == "__main__":
     axarr[0].plot(df['close'] * kdivs_bear['div'].shift(1).values, 'ro')
     axarr[0].plot(df['close'] * kdivs_bull['div'].shift(1).values, 'go')
     axarr[0].set_title(symbol + ' ' + gran)
-    # axarr[1].set_title('Bollinger Bands Percent Bandwidth')
-    # axarr[1].plot(bbl)
-    # axarr[1].plot(bbl * bpf, 'rx')
-    # axarr[1].plot(bbl * pbf, 'gx')
+    axarr[2].set_title('Bollinger Bands Percent Bandwidth')
+    axarr[2].plot(bbl)
+    axarr[2].plot(bbl * bpf, 'rx')
+    axarr[2].plot(bbl * pbf, 'gx')
     axarr[1].set_title('SRSI')
     axarr[1].plot(K)
     axarr[1].plot(D)
